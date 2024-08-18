@@ -37,7 +37,10 @@ pipeline{
         }
 
         stage("HOD Confirmation") {
-            input 'Are we good to proceed?'
+            input {
+                message "Should we continue?"
+                ok "yes, we should"
+            }
             steps{
                 echo "Thank you the deployment will be started in next 1 minute."
                 sh 'sleep 10'
