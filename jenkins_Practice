@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+
+    environment {
+        name = 'sysops'
+    }
+    
+    parameters {
+        string(name: 'person',  defaultValue: 'zeshan', description: "Who are you")
+        booleanParam(name: 'Is Male',  defaultValue: 'true', description: "")
+        choice(name: 'City Name',  choices: ['Lahore', 'Multan', 'Karachi'], description: "")
+    }
+
+    stages {
+        stage('Hello-World') {
+            steps {
+                echo 'Hello World'
+            }
+        }    
+        
+        stage('Run Command - Date check') {
+            steps {
+                sh 'date'
+                sh 'pwd'
+                sh '''
+                ls
+                whoami
+                '''
+            }
+        }
+        
+        stage('Enviroment Variables') {
+               environment {
+                   username = 'sysops'
+                }
+            steps {
+                sh 'echo "${BUILD_ID}"'
+                sh 'echo "${name}"'
+                sh 'echo "${username}"'
+            }            
+        }
+        
+        stage('Parameters') {
+            steps {
+                sh 'echo "${person}"'
+            }   
+        }
+
+        stage('Hello-Build') {
+            steps {
+                echo 'Hello Build'
+                sh 'echo "${name}"'
+                sh 'echo "${username}"'
+                
+            }            
+        }
+        
+       stage('Hello-Deploy_on_Test') {
+            steps {
+                echo 'Hello Deploy on Test'
+            }   
+        }
+
+       stage('Continue ?') {
+            input {
+                message "Should we continue?"
+                ok "yes, we should"
+            }
+	        steps {
+                echo 'Hello, I ll Deploy on Prod'
+            	}
+	    }        
+
+        stage('Hello-Deploy_on_Prod') {         
+            steps {
+                echo 'Hello Deploy on Prod'
+            }            
+        }
+    }
+    
+    post {
+        always {
+            echo "I'll always say hello again"
+        }
+        failure {
+            echo "there is failure"
+        }
+        success {
+            echo "Yahoo, It's a success!!! Go Grab a coffee"
+        }
+    }
+}
