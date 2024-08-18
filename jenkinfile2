@@ -1,0 +1,61 @@
+pipeline{
+    agent any
+    /*{
+        label "node"
+    }*/
+//Stages for the deployments
+    stages{
+        stage("Print Hello-First-Time") {
+            steps{
+                echo "Hello, Running the 1st Job"
+            }
+            post{
+                always{
+                    echo "Hello, The 1st Job is successfully executed"
+                }
+                success{
+                    echo "Hello, The 1st Job is success"
+                }
+                failure{
+                    echo "Hello, The 1st Job execution is falied"
+                }
+            }
+        }
+//stage 2
+        stage("Run Some Shell Commands") {
+            steps{
+                sh '''pwd
+                      ls
+                      whoami'''
+            }
+        }
+
+        stage("A") {
+            steps{
+                echo "========executing A========"
+            }
+        }
+
+        stage("HOD Confirmation") {
+            input 'Are we good to proceed?'
+            steps{
+                echo "Thank you the deployment will be started in next 1 minute."
+                sh 'sleep 10'
+                echo "the deployemnent is in process"
+            }
+        }
+    }
+
+//Post Block// 
+    post{
+        always{
+            echo "Hello, All the Jobs are successfully executed"
+        }
+        success{
+            echo "Hello, All the Jobs are success"
+            }
+        failure{
+            echo "Hello, Few Jobs execution is falied"
+            }
+        }
+    }
